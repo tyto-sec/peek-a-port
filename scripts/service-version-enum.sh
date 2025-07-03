@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # Usage:
-# ./service-scan.sh <open_ports_file> [stealth|stealth_slow]
+# ./service-scan.sh <open_ports_file> [stealth|stealth_slow] [decoy_ip[,decoy_ip2,...]]
 
 OPEN_PORTS_FILE="$1"
 MODE="$2"
+DECOY_LIST="$3"
 DATE="$(date -I)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RESULTS_DIR="${SCRIPT_DIR}/../results"
@@ -14,21 +15,20 @@ FILENAME_PREFIX="${RESULTS_DIR}/${OPEN_PORTS_NAME}_${DATE}"
 
 if [[ ! -f "$OPEN_PORTS_FILE" ]]; then
     echo "Error: Invalid open ports file '$OPEN_PORTS_FILE'."
-    echo "Usage: $0 <open_ports_file> [stealth|stealth_slow]"
+    echo "Usage: $0 <open_ports_file> [stealth|stealth_slow] [decoy_ip[,decoy_ip2,...]]"
     exit 1
 fi
 
-# Define opções padrão
-NMAP_OPTS="-sV -T4 -Pn -n -O"
+NMAP_OPTS="-sV -T4 -Pn -n -O --script banner"
 
 case "$MODE" in
     stealth)
         echo "[*] Ninja mode..."
-        NMAP_OPTS="-sV -T2 -Pn -n"
+        NMAP_OPTS="-sS -T2 -g 53 -Pn -n --script banner"
         ;;
     stealth_slow)
         echo "[*] Patience young padawan, this can take time..."
-        NMAP_OPTS="-sV -T1 -Pn -n"
+        NMAP_OPTS="-sS -T1 -g 53 -Pn -n --script banner"
         ;;
     *)
         if [[ -n "$MODE" ]]; then
@@ -36,9 +36,14 @@ case "$MODE" in
             echo "Use: stealth or stealth_slow"
             exit 1
         fi
-    echo "[*] This will be as quick as possible..."
-    ;;
+        echo "[*] This will be as quick as possible..."
+        ;;
 esac
+
+if [[ -n "$DECOY_LIST" ]]; then
+    echo "[*] Using decoy(s): $DECOY_LIST"
+    NMAP_OPTS="$NMAP_OPTS -D $DECOY_LIST"
+fi
 
 declare -A TARGETS
 
@@ -78,7 +83,8 @@ for xmlfile in "${FILENAME_PREFIX}"_*_service_scan.xml; do
                 string(service/@product), ':',
                 string(service/@version), ':',
                 string(service/@extrainfo), ':',
-                string(service/@ostype)
+                string(service/@ostype), ':',
+                string(script[@id='banner']/@output)
             )" -n \
         "$xmlfile" >> "$OUTPUT_FILE"
 done
