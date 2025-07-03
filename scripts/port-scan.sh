@@ -19,7 +19,7 @@ if [[ ! -f "$HOSTS_FILE" ]]; then
   exit 1
 fi
 
-NMAP_OPTS="-sS -sU --top-ports 50 -T5 -Pn -n -p-"
+NMAP_OPTS="-sS -sU --top-ports 50 -T4 -Pn -n -p-"
 
 case "$MODE" in
   stealth)

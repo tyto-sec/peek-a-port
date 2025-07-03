@@ -23,15 +23,15 @@ while IFS=: read -r HOST PORT PROTOCOL PRODUCT VERSION _; do
     case "$PROTOCOL" in
 
         ssh)
-            ./enum_ssh.sh "$HOST" "$PORT" "$PRODUCT" "$VERSION"
+            ./services/enum_ssh.sh "$HOST" "$PORT" "$PRODUCT" "$VERSION"
             ;;
 
         http)
-            ./enum_http.sh "$HOST" "$PORT" "$PRODUCT" "$VERSION"
+            ./services/enum_http.sh "$HOST" "$PORT" "$PRODUCT" "$VERSION"
             ;;
 
         domain)
-            ./enum_dns.sh "$HOST" "$PORT" "$PRODUCT" "$VERSION"
+            ./services/enum_dns.sh "$HOST" "$PORT" "$PRODUCT" "$VERSION"
             ;;
 
         *)
