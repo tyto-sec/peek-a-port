@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage:
-# ./service-scan.sh <open_ports_file> [stealth|stealth_slow] [decoy_ip[,decoy_ip2,...]]
+# ./version-scan.sh <open_ports_file> [stealth|stealth_slow] [decoy_ip[,decoy_ip2,...]]
 
 OPEN_PORTS_FILE="$1"
 MODE="$2"
@@ -66,7 +66,7 @@ for HOST in "${!TARGETS[@]}"; do
         -oX "${FILENAME_PREFIX}_${HOST}_service_scan.xml" \
         "$HOST"
 
-    xsltproc "${FILENAME_PREFIX}_${HOST}_service_scan.xml" -o "${FILENAME_PREFIX}_${HOST}_service_scan.html"
+    xsltproc "${FILENAME_PREFIX}_${HOST}_service_scan.xml" -o "${FILENAME_PREFIX}_${HOST}_version_scan.html"
 done
 
 OUTPUT_FILE="${FILENAME_PREFIX}_services.txt"

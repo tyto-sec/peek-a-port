@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage:
-# ./scan.sh <hosts_file> [stealth|stealth_slow] [decoy_ip[,decoy_ip2,...]]
+# ./port-scan.sh <hosts_file> [stealth|stealth_slow] [decoy_ip[,decoy_ip2,...]]
 
 HOSTS_FILE="$1"
 HOSTS_FILE_BASENAME="$(basename "$HOSTS_FILE")"

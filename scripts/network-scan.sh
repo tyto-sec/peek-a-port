@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Usage:
+# ./network-scan.sh <network>
+
 NETWORK=$1
 NETWORK_NAME=${NETWORK%%/*}
 DATE="$(date -I)"
